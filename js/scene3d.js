@@ -1,5 +1,5 @@
-import { abductionProgress } from './world3d-state.js?v=15';
-import { panicSpeed, getEscapeAction } from './movement-profile.js?v=15';
+import { abductionProgress } from './world3d-state.js?v=16';
+import { panicSpeed, getEscapeAction } from './movement-profile.js?v=16';
 
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
 
@@ -7,7 +7,7 @@ export async function createWorld3D(mount, labels, onReady) {
   await loadThree();
   const THREE = window.THREE;
   const world = new UfoWorld(THREE, mount, labels);
-  world.setStudents(['An NhiÃªn', 'Báº£o Ngá»c', 'Gia HÃ¢n', 'Minh Khang', 'Thanh Vy']);
+  world.setStudents(['An Nhiên', 'Bảo Ngọc', 'Gia Hân', 'Minh Khang', 'Thanh Vy']);
   world.start();
   onReady?.(world);
   return world;
@@ -87,6 +87,9 @@ class UfoWorld {
     key.shadow.camera.top = 28;
     key.shadow.camera.bottom = -28;
     this.scene.add(key);
+    this.ambientPulse = new T.PointLight(0x5deaff, .7, 34, 2);
+    this.ambientPulse.position.set(0, 10, 0);
+    this.scene.add(this.ambientPulse);
   }
 
   buildTown() {
@@ -121,6 +124,7 @@ class UfoWorld {
     
     const configs = [[-13, -13, 0xee7d8e], [-20, -8, 0x806bf0], [-14, 15, 0x46b5db], [13, -13, 0xfcbd55], [20, -8, 0xa178ec], [14, 15, 0x49d8ac], [-21, 8, 0xff7595], [21, 10, 0x5cd3f3]];
     configs.forEach(([x, z, color], i) => this.house(x, z, color, 4.3 + (i % 3), 4.2 + (i % 2) * 1.2));
+    [[-24, -2], [24, 2], [-2, -24], [2, 24]].forEach(([x, z]) => this.streetLamp(x, z));
     
     for (const [x, z] of [[-8, -8], [8, -8], [-8, 8], [8, 8], [-18, 2], [18, 2], [-2, -18], [2, 18]]) {
       this.tree(x, z);
@@ -161,9 +165,12 @@ class UfoWorld {
     roof.rotation.y = Math.PI / 4;
     roof.castShadow = true;
     g.add(roof);
+    const door = new T.Mesh(new T.BoxGeometry(.7, 1.2, .08), new T.MeshStandardMaterial({ color: 0x18254d, emissive: 0x0b173f, emissiveIntensity: .6 }));
+    door.position.set(0, .6, w / 2 + .05);
+    g.add(door);
     for (let yi = 1; yi < h; yi += 1.45) {
       for (let xi = -1; xi <= 1; xi += 2) {
-        const win = new T.Mesh(new T.PlaneGeometry(.65, .78), new T.MeshBasicMaterial({ color: 0xfff4a5 }));
+        const win = new T.Mesh(new T.PlaneGeometry(.65, .78), new T.MeshStandardMaterial({ color: 0xffe77a, emissive: 0xffb52e, emissiveIntensity: .8, roughness: .25 }));
         win.position.set(xi * w * .25, yi, 0);
         win.position.z = w / 2 + .01;
         g.add(win);
@@ -171,6 +178,19 @@ class UfoWorld {
     }
     g.position.set(x, 0, z);
     this.scene.add(g);
+  }
+
+  streetLamp(x, z) {
+    const T = this.T;
+    const pole = new T.Mesh(new T.CylinderGeometry(.08, .11, 3.4, 8), new T.MeshStandardMaterial({ color: 0x293659, metalness: .7 }));
+    pole.position.set(x, 1.7, z);
+    this.scene.add(pole);
+    const bulb = new T.PointLight(0xffd46b, 1.2, 11, 2);
+    bulb.position.set(x, 3.35, z);
+    this.scene.add(bulb);
+    const cap = new T.Mesh(new T.SphereGeometry(.24, 10, 8), new T.MeshBasicMaterial({ color: 0xffef9b }));
+    cap.position.copy(bulb.position);
+    this.scene.add(cap);
   }
 
   tree(x, z) {
@@ -265,6 +285,12 @@ class UfoWorld {
     beam.position.y = -.4;
     this.ufo.add(beam);
     this.mainBeam = beam;
+    this.beamLight = new T.SpotLight(this.skin.accent, 0, 34, Math.PI / 5, .5, 1.7);
+    this.beamLight.position.set(0, -.35, 0);
+    this.beamLight.target.position.set(0, -14, 0);
+    this.beamLight.castShadow = true;
+    this.beamLight.shadow.mapSize.set(512, 512);
+    this.ufo.add(this.beamLight, this.beamLight.target);
     
     this.sideBeams = [];
     for (const side of [-1, 1]) {
@@ -278,8 +304,8 @@ class UfoWorld {
     }
     
     this.beamRings = [];
-    for (let i = 0; i < 4; i++) {
-      const ring = new T.Mesh(new T.TorusGeometry(1.5 + i * .8, .08, 8, 24), new T.MeshBasicMaterial({ color: this.skin.accent, transparent: true, opacity: 0 }));
+    for (let i = 0; i < 6; i++) {
+      const ring = new T.Mesh(new T.TorusGeometry(1.1 + i * .55, .07, 8, 32), new T.MeshBasicMaterial({ color: this.skin.accent, transparent: true, opacity: 0, depthWrite: false }));
       ring.position.y = -3 - i * 1.5;
       ring.rotation.x = Math.PI / 2;
       this.ufo.add(ring);
@@ -582,8 +608,9 @@ class UfoWorld {
     this.beamMat.opacity = .16;
     this.huntingPhase = 'scan';
     this.students.forEach(actor => {
-      actor.panicking = 0;
+      actor.panicking = .8;
       actor.escapeCooldown = 0;
+      actor.target = this.streetPoint();
     });
   }
 
@@ -638,7 +665,7 @@ class UfoWorld {
   triggerNearbyEscapes(focus, limit) {
     const now = this.clock.getElapsedTime();
     const active = this.students.filter(actor => actor.escapeAction).length;
-    const slots = Math.max(0, 3 - active);
+    const slots = Math.max(0, 5 - active);
     if (!slots) return;
     const candidates = this.students
       .filter(actor => !actor.abduct && !actor.escapeAction && (actor.escapeCooldown || 0) < now)
@@ -750,10 +777,11 @@ class UfoWorld {
         const speed = panicSpeed(panicLevel);
         
         if (a.escapeAction) {
-          a.escapeProgress += dt * 2.5;
+          a.escapeProgress += dt * 1.25;
           
           const escapeDir = a.escapeTarget ? a.escapeTarget.clone().sub(a.pos).setY(0).normalize() : null;
           if (a.escapeAction === 'roll') {
+            a.pos.addScaledVector(to, speed * dt * .9);
             a.group.rotation.x = a.escapeProgress * Math.PI * 2;
             a.group.rotation.z = Math.sin(a.escapeProgress * 8) * .8;
           } else if (['hide', 'water', 'climb', 'vault'].includes(a.escapeAction) && escapeDir) {
@@ -764,9 +792,11 @@ class UfoWorld {
             if (a.escapeAction === 'vault') a.pos.y = Math.sin(Math.min(1, a.escapeProgress) * Math.PI) * 1.7;
             a.group.rotation.x = -Math.PI / 6;
           } else if (a.escapeAction === 'dig') {
+            a.pos.addScaledVector(to, speed * dt * .55);
             a.pos.y = -Math.min(.5, a.escapeProgress * .65);
             a.group.rotation.x = -.55;
           } else if (a.escapeAction === 'jump') {
+            a.pos.addScaledVector(to, speed * dt * 1.25);
             const jumpHeight = Math.sin(a.escapeProgress * Math.PI) * 2.5;
             a.pos.y = jumpHeight;
             a.group.rotation.x = a.escapeProgress * Math.PI;
@@ -828,7 +858,7 @@ class UfoWorld {
       }
     }
     
-    if (this.scanActive) {
+    if (this.scanActive || this.abducting) {
       const blink = (Math.sin(t * 18) + 1) / 2;
       this.lights.forEach((light, i) => light.scale.setScalar(.8 + blink * (i % 2 ? 1.4 : .7)));
       this.sideBeams.forEach((beam, i) => {
@@ -836,22 +866,34 @@ class UfoWorld {
         beam.rotation.y = t * (i ? -.8 : .8);
       });
       this.rimMat.emissiveIntensity = 1.2 + blink * (2.2 + this.scanPulse * 1.5);
+      this.beamLight.intensity = .8 + this.scanPulse * 3.5 + blink * 1.4;
+      this.beamLight.color.setHex(this.huntingPhase === 'lock' || this.abducting ? 0xffed8b : this.skin.accent);
+      this.ambientPulse.intensity = .4 + blink * 1.1;
       
-      if (this.huntingPhase === 'lock') {
+      if (this.huntingPhase === 'lock' || this.abducting) {
         this.beamRings.forEach((ring, i) => {
-          const phase = (t * 3 + i * 0.5) % 2;
-          ring.material.opacity = Math.max(0, 1 - phase) * .6;
-          ring.position.y = -3 - phase * 8;
+          const phase = (t * 2.6 + i * .36) % 2.2;
+          ring.material.opacity = Math.max(0, 1 - phase / 2.2) * .8;
+          ring.position.y = -1.5 - phase * 6.2;
+          const scale = .7 + phase * 1.15;
+          ring.scale.set(scale, scale, 1);
         });
       }
     } else {
       this.ufoTarget.set(Math.sin(t * .55) * 9, 12 + Math.sin(t * 1.4) * .5, Math.cos(t * .4) * 7);
       this.rimMat.emissiveIntensity = 1.1;
+      this.beamLight.intensity = 0;
+      this.ambientPulse.intensity = .55;
       this.beamRings.forEach(ring => ring.material.opacity = 0);
     }
     
+    const dx = this.ufoTarget.x - this.ufo.position.x;
+    const dz = this.ufoTarget.z - this.ufo.position.z;
     this.ufo.position.lerp(this.ufoTarget, dt * 2.5);
-    this.ufo.rotation.y += dt * .35;
+    this.ufo.rotation.y += dt * (this.scanActive ? 1.6 : .55);
+    this.ufo.rotation.z = T.MathUtils.lerp(this.ufo.rotation.z, -dx * .035 + Math.sin(t * 2.2) * .075, dt * 3.5);
+    this.ufo.rotation.x = T.MathUtils.lerp(this.ufo.rotation.x, dz * .022 + Math.cos(t * 1.7) * .055, dt * 3.5);
+    this.ufo.position.y += Math.sin(t * 2.6) * .018;
     this.planet.rotation.y += dt * .08;
     this.stars.rotation.y += dt * .015;
     
