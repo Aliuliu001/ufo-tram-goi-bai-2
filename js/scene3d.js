@@ -7,7 +7,7 @@ export async function createWorld3D(mount, labels, onReady) {
   await loadThree();
   const THREE = window.THREE;
   const world = new UfoWorld(THREE, mount, labels);
-  world.setStudents(['An Nhiên', 'Bảo Ngọc', 'Gia Hân', 'Minh Khang', 'Thanh Vy']);
+  world.setStudents(['An NhiÃªn', 'Báº£o Ngá»c', 'Gia HÃ¢n', 'Minh Khang', 'Thanh Vy']);
   world.start();
   onReady?.(world);
   return world;
@@ -53,6 +53,7 @@ class UfoWorld {
     this.cameraMode = 'overview';
     this.characterSkin = 'astronaut';
     this.hideouts = [];
+    this.trees = [];
     this.skin = { accent: 0x9af76d, accent2: 0x6ddaf7 };
     
     this.huntingPhase = 'idle';
@@ -186,6 +187,7 @@ class UfoWorld {
     });
     g.position.set(x, 0, z);
     this.scene.add(g);
+    this.trees.push({ type: 'tree', pos: new T.Vector3(x, 0, z) });
   }
 
   hideout(x, z, type) {
@@ -213,7 +215,7 @@ class UfoWorld {
     }
     g.position.set(x, 0, z);
     this.scene.add(g);
-    this.hideouts.push(new T.Vector3(x, 0, z));
+    this.hideouts.push({ type, pos: new T.Vector3(x, 0, z) });
   }
 
   buildUfo() {
@@ -616,7 +618,7 @@ class UfoWorld {
         this.slowMo = true;
         this.targetSlowMoFactor = 0.45;
         this.lockStartTime = this.clock.getElapsedTime();
-        const escape = getEscapeAction(actor, this.hideouts, actor.pos);
+        const escape = getEscapeAction(actor, [...this.hideouts, ...this.trees], actor.pos);
         actor.escapeAction = escape.action;
         actor.escapeTarget = escape.target;
         actor.escapeProgress = 0;
@@ -643,7 +645,7 @@ class UfoWorld {
       .sort((a, b) => a.pos.distanceTo(focus.pos) - b.pos.distanceTo(focus.pos))
       .slice(0, Math.min(limit, slots));
     candidates.forEach(actor => {
-      const escape = getEscapeAction(actor, this.hideouts, actor.pos);
+      const escape = getEscapeAction(actor, [...this.hideouts, ...this.trees], actor.pos);
       actor.escapeAction = escape.action;
       actor.escapeTarget = escape.target;
       actor.escapeProgress = 0;
@@ -750,13 +752,20 @@ class UfoWorld {
         if (a.escapeAction) {
           a.escapeProgress += dt * 2.5;
           
+          const escapeDir = a.escapeTarget ? a.escapeTarget.clone().sub(a.pos).setY(0).normalize() : null;
           if (a.escapeAction === 'roll') {
             a.group.rotation.x = a.escapeProgress * Math.PI * 2;
             a.group.rotation.z = Math.sin(a.escapeProgress * 8) * .8;
-          } else if (a.escapeAction === 'dive' && a.escapeTarget) {
-            const diveDir = a.escapeTarget.clone().sub(a.pos).normalize();
-            a.pos.addScaledVector(diveDir, speed * dt * 1.5);
+          } else if (['hide', 'water', 'climb', 'vault'].includes(a.escapeAction) && escapeDir) {
+            a.pos.addScaledVector(escapeDir, speed * dt * 1.65);
+            if (a.escapeAction === 'hide') a.group.scale.setScalar(Math.max(.45, 1 - a.escapeProgress * .5));
+            if (a.escapeAction === 'water') a.pos.y = Math.max(-.22, .22 - a.escapeProgress * .55);
+            if (a.escapeAction === 'climb') a.pos.y = Math.sin(Math.min(1, a.escapeProgress) * Math.PI / 2) * 2.6;
+            if (a.escapeAction === 'vault') a.pos.y = Math.sin(Math.min(1, a.escapeProgress) * Math.PI) * 1.7;
             a.group.rotation.x = -Math.PI / 6;
+          } else if (a.escapeAction === 'dig') {
+            a.pos.y = -Math.min(.5, a.escapeProgress * .65);
+            a.group.rotation.x = -.55;
           } else if (a.escapeAction === 'jump') {
             const jumpHeight = Math.sin(a.escapeProgress * Math.PI) * 2.5;
             a.pos.y = jumpHeight;
@@ -768,6 +777,7 @@ class UfoWorld {
             a.escapeProgress = 0;
             a.group.rotation.x = 0;
             a.group.rotation.z = 0;
+            a.group.scale.setScalar(1);
           }
         } else {
           a.pos.addScaledVector(to, a.speed * speed * dt);
