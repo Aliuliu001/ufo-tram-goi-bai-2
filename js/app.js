@@ -70,6 +70,7 @@ let reduceMotion = false;
 let classData = loadClasses();
 let activeClass = getActiveClass(classData.classes, classData.activeClassId);
 students = [...activeClass.students];
+round = createRound(students);
 
 // Load preferences
 const skinPrefs = loadSkinPreferences();
