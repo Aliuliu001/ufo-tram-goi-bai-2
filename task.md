@@ -56,7 +56,7 @@
 ## 5. Kiá»m thá»­ vÃ  phÃ¡t hÃ nh
 
 - [x] 5.1 Cháº¡y 40 test, type-check vÃ  build production.
-- [~] 5.2 ÄÃ£ kiá»m tra settings, kho áº£nh trá»ng/ngÃ¢n hÃ ng bÃ i vÃ  lÆ°á»£t quÃ©t cÆ¡ báº£n trÃªn Pages; cÃ²n test thá»§ cÃ´ng ba dáº¡ng bÃ i vá»i dá»¯ liá»u tháº­t vÃ  áº£nh lá»i.
+- [~] 5.2 ÄÃ£ kiá»m tra settings, kho áº£nh trá»ng/ngÃ¢n hÃ ng bÃ i, lÆ°á»£t quÃ©t vÃ  quiz end-to-end trÃªn Pages; cÃ²n test flashcard, Äiá»n tá»«/anagram/unjumble vá»i dá»¯ liá»u tháº­t vÃ  áº£nh lá»i.
 - [~] 5.3 ÄÃ£ kiá»m tra reload, khÃ´ng trÃ¹ng cÆ¡ báº£n vÃ  Giáº£m hiá»u á»©ng; cÃ²n test lá»p/há»c sinh, Ã¢m thanh vÃ  reset Äáº§y Äá»§ trÃªn mÃ¡y cÃ³ WebGL.
 - [x] 5.4 Cáº­p nháº­t README vÃ  GitHub Pages.
 - [x] 5.5 XÃ¡c nháº­n link phÃ¡t hÃ nh.
