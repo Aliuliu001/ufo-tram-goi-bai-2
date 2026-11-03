@@ -6,6 +6,7 @@ import { UFO_SKINS, CREW_SKINS, getUfoSkin, getCrewSkin, loadSkinPreferences, sa
 import { loadClasses, saveClasses, getActiveClass, createClass, updateClass, deleteClass, duplicateClass, exportClassesJSON, importClassesJSON, importClassesCSV } from './class-manager.js';
 import { mountImageLibrary } from './image-library.js';
 import { mountBackupControls } from './game-backup.js';
+import { mountQuestionBank, runLearningActivity } from './question-bank.js';
 
 const DEFAULT_STUDENTS = ['An Nhiên', 'Bảo Ngọc', 'Gia Hân', 'Minh Khang', 'Thanh Vy'];
 const $ = s => document.querySelector(s);
@@ -26,6 +27,7 @@ const el = {
   classTab: $('#class-tab'),
   studentTab: $('#student-tab'),
   imagesTab: $('#images-tab'),
+  questionsTab: $('#questions-tab'),
   classManagement: $('#class-management'),
   input: $('#students-input'),
   save: $('#save-students-button'),
@@ -202,6 +204,9 @@ function finishScan(winners) {
     setTimer(seconds, 'HOÀN THÀNH NHIỆM VỤ');
     el.title.textContent = 'Đã công bố kết quả';
     render();
+    runLearningActivity(activeClass.id, winners, () => {
+      el.status.textContent = 'Đã hoàn thành nhiệm vụ học tập. UFO thả phi hành gia xuống để tiếp tục chạy!';
+    });
   });
 }
 
@@ -555,7 +560,7 @@ if (el.classSelector) {
 // Settings tabs
 if (el.classTab && el.studentTab) {
   const switchSettingsPanel = panel => {
-    [['class', el.classTab], ['students', el.studentTab], ['images', el.imagesTab]].forEach(([name, button]) => {
+    [['class', el.classTab], ['students', el.studentTab], ['images', el.imagesTab], ['questions', el.questionsTab]].forEach(([name, button]) => {
       if (!button) return;
       const active = name === panel;
       button.style.borderBottomColor = active ? 'var(--accent)' : 'transparent';
@@ -565,6 +570,7 @@ if (el.classTab && el.studentTab) {
     $('#student-list-editor').style.display = panel === 'students' ? 'block' : 'none';
     $('#image-library').style.display = panel === 'images' ? 'block' : 'none';
     $('#backup-library').style.display = panel === 'images' ? 'block' : 'none';
+    $('#question-bank').style.display = panel === 'questions' ? 'block' : 'none';
   };
   el.classTab.onclick = () => {
     switchSettingsPanel('class');
@@ -575,8 +581,10 @@ if (el.classTab && el.studentTab) {
     el.input.value = students.join('\n');
   };
   el.imagesTab.onclick = () => switchSettingsPanel('images');
+  el.questionsTab.onclick = () => switchSettingsPanel('questions');
   mountImageLibrary($('#image-library'));
   mountBackupControls($('#backup-library'));
+  mountQuestionBank($('#question-bank'));
 }
 
 el.settingsOpen.onclick = () => {
