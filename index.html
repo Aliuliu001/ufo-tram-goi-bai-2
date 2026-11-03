@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/image-library.css?v=1">
   <link rel="stylesheet" href="css/question-bank.css?v=1">
   <link rel="stylesheet" href="css/question-images.css?v=1">
+  <link rel="stylesheet" href="css/crew-layout.css?v=1">
   <link rel="stylesheet" href="css/accessibility.css?v=1">
 </head>
 <body>
@@ -29,6 +30,8 @@
       <div class="progress-wrap"><span id="progress-label">0 / 5 học sinh</span><div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div></div>
     </section>
 
+    <section class="game-workspace">
+      <aside class="crew-panel panel"><div class="crew-panel-head"><div><p class="eyebrow">PHI HÀNH ĐOÀN</p><h2 id="crew-class-name">Lớp</h2></div><strong id="crew-count">0 bạn sẵn sàng</strong></div><p class="muted">Chạm tên để cho bạn tạm nghỉ.</p><button class="tiny-button" id="enable-all" type="button">✓ Bật tất cả</button><div id="student-list" class="student-list crew-list"></div><p class="muted crew-note">✨ Không ai biết UFO sẽ gọi ai tiếp theo!</p></aside>
     <section class="stage panel" aria-label="Sân khấu UFO 3D">
       <div id="world3d" class="world3d" aria-label="Thị trấn UFO 3D: kéo để xoay góc nhìn, lăn chuột để phóng to hoặc thu nhỏ"></div>
       <div id="world-labels" class="world-labels" aria-hidden="true"></div>
@@ -40,6 +43,7 @@
         <span>ĐỘI: <b id="crew-skin-name">Phi hành gia</b></span>
         <button class="tiny-button" id="skin-button" type="button">🎨 Đổi skin</button>
       </div>
+    </section>
     </section>
 
     <section class="controls panel scan-controls">
@@ -53,7 +57,6 @@
     </section>
     <section class="camera-bar panel"><span class="eyebrow">GÓC NHÌN 3D</span><div class="camera-options"><button data-camera="overview" class="selected" type="button">◉ Toàn cảnh</button><button data-camera="follow" type="button">🛸 Theo dấu UFO</button><button data-camera="street" type="button">⌂ Góc phố</button></div><strong id="scan-timer">6 GIÂY<br><small>SẴN SÀNG DÒ TÌM</small></strong></section>
 
-    <section class="queue panel"><div><p class="eyebrow">DANH SÁCH TÍN HIỆU</p><h2>Các bạn còn chờ</h2></div><div id="student-list" class="student-list"></div></section>
   </main>
 
   <dialog id="settings-dialog" class="dialog">
