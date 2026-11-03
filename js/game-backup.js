@@ -4,6 +4,8 @@ const CLASS_KEY = 'ufo-classes';
 const QUESTION_KEY = 'ufo-question-bank-v1';
 const PREFERENCES_KEY = 'ufo-preferences';
 const LEGACY_STUDENTS_KEY = 'ufo-students';
+const IMAGE_WORD_PAIRS_KEY = 'ufo-image-word-pairs-v1';
+const LEARNING_MODE_KEY = 'ufo-learning-mode-v1';
 const openDb = () => new Promise((resolve, reject) => { const request = indexedDB.open(DB_NAME, 1); request.onupgradeneeded = () => request.result.createObjectStore(STORE, { keyPath: 'id' }); request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error || new Error('Không thể mở kho ảnh.')); });
 const allImages = async () => { const db = await openDb(); return new Promise((resolve, reject) => { const request = db.transaction(STORE).objectStore(STORE).getAll(); request.onsuccess = () => { db.close(); resolve(request.result); }; request.onerror = () => { db.close(); reject(request.error); }; }); };
 const replaceImages = async images => { const db = await openDb(); return new Promise((resolve, reject) => { const tx = db.transaction(STORE, 'readwrite'); const store = tx.objectStore(STORE); store.clear(); images.forEach(image => store.put(image)); tx.oncomplete = () => { db.close(); resolve(); }; tx.onabort = tx.onerror = () => { db.close(); reject(tx.error || new Error('Không thể ghi kho ảnh.')); }; }); };
@@ -20,6 +22,8 @@ async function exportGame() {
     questions: JSON.parse(localStorage.getItem(QUESTION_KEY) || 'null'),
     preferences: JSON.parse(localStorage.getItem(PREFERENCES_KEY) || 'null'),
     legacyStudents: JSON.parse(localStorage.getItem(LEGACY_STUDENTS_KEY) || 'null'),
+    imageWordPairs: JSON.parse(localStorage.getItem(IMAGE_WORD_PAIRS_KEY) || 'null'),
+    learningMode: localStorage.getItem(LEARNING_MODE_KEY) || 'call-only',
     images: packedImages
   }, null, 2);
 }
@@ -42,6 +46,8 @@ async function restoreGame(file) {
   if (data.questions) localStorage.setItem(QUESTION_KEY, JSON.stringify(data.questions));
   if (data.preferences) localStorage.setItem(PREFERENCES_KEY, JSON.stringify(data.preferences));
   if (data.legacyStudents) localStorage.setItem(LEGACY_STUDENTS_KEY, JSON.stringify(data.legacyStudents));
+  if (data.imageWordPairs) localStorage.setItem(IMAGE_WORD_PAIRS_KEY, JSON.stringify(data.imageWordPairs));
+  if (data.learningMode) localStorage.setItem(LEARNING_MODE_KEY, data.learningMode);
   alert('Đã khôi phục dữ liệu. Trang sẽ tải lại để áp dụng.');
   location.reload();
 }

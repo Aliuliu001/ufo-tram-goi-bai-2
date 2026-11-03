@@ -6,7 +6,7 @@ import { UFO_SKINS, CREW_SKINS, getUfoSkin, getCrewSkin, loadSkinPreferences, sa
 import { loadClasses, saveClasses, getActiveClass, createClass, updateClass, deleteClass, duplicateClass, exportClassesJSON, importClassesJSON, importClassesCSV } from './class-manager.js?v=16';
 import { mountImageLibrary } from './image-library.js?v=16';
 import { mountBackupControls } from './game-backup.js?v=16';
-import { mountQuestionBank, runLearningActivity } from './question-bank.js?v=16';
+import { mountQuestionBank, runLearningActivity } from './question-bank.js?v=17';
 
 const DEFAULT_STUDENTS = ['An Nhiên', 'Bảo Ngọc', 'Gia Hân', 'Minh Khang', 'Thanh Vy'];
 const $ = s => document.querySelector(s);
@@ -53,7 +53,9 @@ const el = {
   help: $('#scan-help'),
   crewClassName: $('#crew-class-name'),
   crewCount: $('#crew-count'),
-  enableAll: $('#enable-all')
+  enableAll: $('#enable-all'),
+  learningMode: $('#learning-mode'),
+  learningModeNote: $('#learning-mode-note')
 };
 
 let students = [];
@@ -66,6 +68,17 @@ let scanning = false;
 let scanInterval = null;
 let restingStudents = new Set();
 let reduceMotion = false;
+const LEARNING_MODE_KEY = 'ufo-learning-mode-v1';
+let learningMode = 'call-only';
+try { learningMode = localStorage.getItem(LEARNING_MODE_KEY) || 'call-only'; } catch {}
+
+function renderLearningMode() {
+  const learning = learningMode !== 'call-only';
+  if (el.learningMode) el.learningMode.value = learningMode;
+  if (el.learningModeNote) el.learningModeNote.textContent = learningMode === 'image-quiz' ? 'Ảnh bên trái · 4 từ bên phải. Mỗi lượt bắt 1 bạn.' : learningMode === 'flashcards' ? 'UFO bắt xong sẽ mở bộ thẻ. Mỗi lượt bắt 1 bạn.' : 'UFO bắt xong là công bố tên.';
+  if (el.inc) el.inc.disabled = learning;
+  if (learning && pickCount !== 1) { pickCount = 1; if (el.pick) el.pick.textContent = '1'; }
+}
 
 // Class management
 let classData = loadClasses();
@@ -167,7 +180,7 @@ function startScan() {
   el.name.closest('.world-card').classList.add('scanning');
   
   const pool = available();
-  const winners = chooseScanWinners(pool, pickCount);
+  const winners = chooseScanWinners(pool, learningMode === 'call-only' ? pickCount : 1);
   let remaining = seconds;
   let tick = 0;
   
@@ -233,8 +246,8 @@ function finishScan(winners) {
     el.title.textContent = 'Đã công bố kết quả';
     render();
     runLearningActivity(activeClass.id, winners, () => {
-      el.status.textContent = 'Đã hoàn thành nhiệm vụ học tập. UFO thả phi hành gia xuống để tiếp tục chạy!';
-    });
+      el.status.textContent = learningMode === 'call-only' ? 'Đã hoàn thành lượt gọi bài.' : 'Đã hoàn thành nhiệm vụ học tập. UFO thả phi hành gia xuống để tiếp tục chạy!';
+    }, learningMode);
   };
   // Thiết bị/trình duyệt không có WebGL vẫn phải hoàn tất lượt gọi bài.
   if (world) world.finishScan(winners, completeRound);
@@ -572,6 +585,13 @@ if (el.enableAll) el.enableAll.onclick = () => {
   render();
 };
 
+if (el.learningMode) el.learningMode.onchange = () => {
+  learningMode = el.learningMode.value;
+  try { localStorage.setItem(LEARNING_MODE_KEY, learningMode); } catch {}
+  renderLearningMode();
+  render();
+};
+
 $$('[data-seconds]').forEach(b => {
   b.onclick = () => {
     seconds = Number(b.dataset.seconds);
@@ -740,6 +760,7 @@ renderClassSelector();
 selectUfoSkin(ufoSkin.id);
 selectCrewSkin(crewSkin.id);
 setTimer(seconds);
+renderLearningMode();
 render();
 
 if (el.music) {

@@ -129,6 +129,12 @@ Mỗi lượt gọi có thể lấy ngẫu nhiên một câu từ bộ đang b�
 4. **Chỉ báo tiến độ bài:** ví dụ `3 / 5 thẻ`, giúp học sinh hiểu còn bao nhiêu bước để được thả xuống.
 5. **Kiểm tra dữ liệu trước khi chơi:** báo rõ ảnh bị lỗi, quiz chưa đủ 4 đáp án, hoặc lớp không còn học sinh sẵn sàng.
 
+## Quyết định bổ sung — Quiz Ảnh → Từ (03-11-2026)
+
+Quiz không nhập sẵn bốn đáp án. Giáo viên nạp một **Kho Input** gồm các cặp `ảnh | từ tương ứng` (mỗi dòng một cặp). Mỗi lượt Quiz chọn một cặp: ảnh là câu hỏi lớn ở **bên trái**, từ tương ứng là đáp án đúng; ba từ của ba cặp khác được lấy ngẫu nhiên làm đáp án nhiễu. Bốn từ được xáo vào lưới **2×2 bên phải**. Một kho cần tối thiểu bốn cặp hợp lệ; không đủ thì báo rõ và lượt UFO vẫn hoàn thành, không bị kẹt.
+
+Ba chế độ lượt chơi được lưu trong cài đặt: **Chỉ gọi tên**, **Flashcard**, **Quiz ảnh → từ**. Hai chế độ học tự giới hạn một học sinh mỗi lượt để bài hiện cho đúng người.
+
 ## Tiêu chí nghiệm thu
 
 - Có thể quản lý lớp và học sinh bằng giao diện tiếng Việt.

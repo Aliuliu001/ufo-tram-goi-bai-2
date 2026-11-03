@@ -32,6 +32,8 @@
 - [x] 2.9 Điền khuyết, anagram và unjumble.
 - [x] 2.10 Luồng đúng/thả xuống, sai/thử lại trên UFO.
 - [ ] 2.11 Kiểm thử thủ công upload 100+ ảnh, backup/restore, file sai và SafeStore.
+- [x] 2.12 Quiz Ảnh → Từ: nạp kho cặp ảnh/từ; ảnh hỏi bên trái, đáp án 2×2 bên phải; đáp án sai lấy ngẫu nhiên từ kho.
+- [x] 2.13 Ba chế độ: Chỉ gọi tên / Flashcard / Quiz Ảnh → Từ; chế độ học chỉ bắt một học sinh mỗi lượt.
 
 ## 3. Giao diện chuẩn đích
 
