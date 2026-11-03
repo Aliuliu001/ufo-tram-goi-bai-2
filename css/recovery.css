@@ -1,0 +1,123 @@
+/* Recovery CSS - v10 improvements */
+
+/* Responsive layout for small screens */
+@media (max-width: 930px) {
+  .scan-controls {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .scan-settings {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+/* Focus visible for accessibility */
+button:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Skin dialog improvements */
+.skin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  max-height: 65vh;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.skin-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.skin-option:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.skin-option.selected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 15%, var(--panel));
+}
+
+.skin-option .skin-preview {
+  font-size: 42px;
+  line-height: 1;
+}
+
+.skin-option strong {
+  font-size: 14px;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.skin-option small {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Stage footer improvements */
+.stage-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.stage-footer span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stage-footer b {
+  color: var(--text);
+}
+
+/* Disabled state for skin button */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Audio controls */
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Dialog section headers */
+.dialog-section {
+  margin-top: 24px;
+}
+
+.dialog-section:first-child {
+  margin-top: 0;
+}
+
+.dialog-section h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

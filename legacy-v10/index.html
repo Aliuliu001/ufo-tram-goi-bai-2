@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090e28">
+  <title>UFO Trạm Gọi Bài</title>
+  <link rel="stylesheet" href="css/app.css?v=10">
+  <link rel="stylesheet" href="css/recovery.css?v=10">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar panel">
+      <div class="brand"><span class="brand-mark">🛸</span><div><p class="eyebrow">TRẠM GỌI BÀI</p><h1>UFO Classroom</h1></div></div>
+      <div class="top-actions">
+        <select id="class-selector" style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);font-size:14px;font-weight:600;cursor:pointer"></select>
+        <button class="icon-button" id="music-button" type="button" aria-label="Bật hoặc tắt nhạc nền">🎵</button>
+        <button class="icon-button" id="sound-button" type="button" aria-label="Bật hoặc tắt hiệu ứng âm">🔊</button>
+        <button class="secondary-button" id="settings-button" type="button">⚙️ Cài đặt</button>
+      </div>
+    </header>
+
+    <section class="mission-bar panel" aria-label="Tiến độ lượt gọi bài">
+      <div><span class="mission-label">NHIỆM VỤ HÔM NAY</span><strong id="mission-text">Sẵn sàng kết nối lớp học</strong></div>
+      <div class="progress-wrap"><span id="progress-label">0 / 5 học sinh</span><div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div></div>
+    </section>
+
+    <section class="stage panel" aria-label="Sân khấu UFO 3D">
+      <div id="world3d" class="world3d" aria-label="Thị trấn UFO 3D: kéo để xoay góc nhìn, lăn chuột để phóng to hoặc thu nhỏ"></div>
+      <div id="world-labels" class="world-labels" aria-hidden="true"></div>
+      <div class="world-hint">🖱️ Kéo để xoay · Lăn chuột để zoom</div>
+      <div id="student-card" class="student-card world-card"><span class="student-orbit">✦</span><p class="card-kicker">TÍN HIỆU CHỜ GỌI</p><h2 id="student-name">Đang khởi động thế giới 3D…</h2><p id="student-status">UFO đang tuần tra trên khu phố.</p></div>
+      <div class="stage-footer">
+        <span>TÀU: <b id="ufo-skin-name">Thám hiểm Sao Mộc</b></span>
+        <span>·</span>
+        <span>ĐỘI: <b id="crew-skin-name">Phi hành gia</b></span>
+        <button class="tiny-button" id="skin-button" type="button">🎨 Đổi skin</button>
+      </div>
+    </section>
+
+    <section class="controls panel scan-controls">
+      <div><p class="eyebrow">BẢNG ĐIỀU KHIỂN</p><h2 id="scan-title">Chuẩn bị chiến dịch bắt học sinh</h2><p class="muted" id="scan-help">Nhấn Space để bắt đầu · Cơ hội như nhau cho tất cả học sinh.</p></div>
+      <div class="scan-settings">
+        <div class="setting-box"><span>SỐ BẠN LÊN TÀU</span><div class="stepper"><button id="pick-dec" type="button">−</button><b id="pick-count">1</b><button id="pick-inc" type="button">+</button></div></div>
+        <button class="toggle-setting on" id="no-repeat" type="button" aria-pressed="true"><b>Không gọi trùng</b><small>Ai cũng có cơ hội</small></button>
+        <div class="setting-box"><span>THỜI GIAN DÒ</span><div class="time-choices"><button data-seconds="6" class="selected" type="button">6s <small>Chuẩn</small></button><button data-seconds="8" type="button">8s</button><button data-seconds="10" type="button">10s</button></div></div>
+      </div>
+      <div class="control-actions"><button class="primary-button" id="call-button" type="button">🚀 Bắt đầu dò tìm</button><button class="secondary-button" id="reset-button" type="button">↻ Làm lại lượt</button></div>
+    </section>
+    <section class="camera-bar panel"><span class="eyebrow">GÓC NHÌN 3D</span><div class="camera-options"><button data-camera="overview" class="selected" type="button">◉ Toàn cảnh</button><button data-camera="follow" type="button">🛸 Theo dấu UFO</button><button data-camera="street" type="button">⌂ Góc phố</button></div><strong id="scan-timer">6 GIÂY<br><small>SẴN SÀNG DÒ TÌM</small></strong></section>
+
+    <section class="queue panel"><div><p class="eyebrow">DANH SÁCH TÍN HIỆU</p><h2>Các bạn còn chờ</h2></div><div id="student-list" class="student-list"></div></section>
+  </main>
+
+  <dialog id="settings-dialog" class="dialog">
+    <form method="dialog" class="dialog-card">
+      <div class="dialog-head">
+        <div><p class="eyebrow">CÀI ĐẶT</p><h2>Quản lý lớp & học sinh</h2></div>
+        <button class="icon-button" aria-label="Đóng" value="cancel">×</button>
+      </div>
+      
+      <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid var(--line)">
+        <button type="button" id="class-tab" class="tab-button active" style="padding:8px 16px;background:none;border:none;border-bottom:2px solid var(--accent);color:var(--text);font-weight:600;cursor:pointer">Quản lý lớp</button>
+        <button type="button" id="student-tab" class="tab-button" style="padding:8px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;cursor:pointer">Danh sách học sinh</button>
+      </div>
+      
+      <div id="class-management" style="display:block"></div>
+      
+      <div id="student-list-editor" style="display:none">
+        <p class="muted">Mỗi dòng một tên. Danh sách này áp dụng cho lớp đang chọn.</p>
+        <textarea id="students-input" rows="9" aria-label="Danh sách học sinh" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);font-family:inherit;font-size:14px;resize:vertical"></textarea>
+        <div class="dialog-actions" style="margin-top:16px">
+          <button class="secondary-button" value="cancel">Hủy</button>
+          <button class="primary-button" id="save-students-button" type="button">💾 Lưu danh sách</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+  
+  <dialog id="skin-dialog" class="dialog">
+    <form method="dialog" class="dialog-card">
+      <div class="dialog-head">
+        <div><p class="eyebrow">TRANG PHỤC</p><h2>Chọn skin</h2></div>
+        <button class="icon-button" aria-label="Đóng" value="cancel">×</button>
+      </div>
+      
+      <div class="dialog-section">
+        <h3>Skin UFO</h3>
+        <div class="skin-grid" id="ufo-skin-grid"></div>
+      </div>
+      
+      <div class="dialog-section">
+        <h3>Skin phi hành đoàn</h3>
+        <div class="skin-grid" id="crew-skin-grid"></div>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/app.js?v=10"></script>
+</body>
+</html>
