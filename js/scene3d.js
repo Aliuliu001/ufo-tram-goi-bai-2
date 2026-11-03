@@ -579,6 +579,10 @@ class UfoWorld {
     this.scanPulse = 0;
     this.beamMat.opacity = .16;
     this.huntingPhase = 'scan';
+    this.students.forEach(actor => {
+      actor.panicking = 0;
+      actor.escapeCooldown = 0;
+    });
   }
 
   scanTarget(name, intensity = 0) {
@@ -602,6 +606,7 @@ class UfoWorld {
       this.beamMat.color.lerp(new this.T.Color(0xff9a4d), 0.4);
       actor.panicking = 0.5;
       actor.target = this.streetPoint();
+      this.triggerNearbyEscapes(actor, 2);
       
     } else {
       this.huntingPhase = 'lock';
@@ -622,9 +627,29 @@ class UfoWorld {
       this.beamMat.color.lerp(new this.T.Color(0xff4d4d), 0.6);
       this.targetCameraRadius = 22;
       actor.panicking = 1;
+      this.triggerNearbyEscapes(actor, 3);
     }
     
     this.ufo.scale.setScalar(1 + intensity * .15);
+  }
+
+  triggerNearbyEscapes(focus, limit) {
+    const now = this.clock.getElapsedTime();
+    const active = this.students.filter(actor => actor.escapeAction).length;
+    const slots = Math.max(0, 3 - active);
+    if (!slots) return;
+    const candidates = this.students
+      .filter(actor => !actor.abduct && !actor.escapeAction && (actor.escapeCooldown || 0) < now)
+      .sort((a, b) => a.pos.distanceTo(focus.pos) - b.pos.distanceTo(focus.pos))
+      .slice(0, Math.min(limit, slots));
+    candidates.forEach(actor => {
+      const escape = getEscapeAction(actor, this.hideouts, actor.pos);
+      actor.escapeAction = escape.action;
+      actor.escapeTarget = escape.target;
+      actor.escapeProgress = 0;
+      actor.escapeCooldown = now + 2.4 + Math.random() * 1.8;
+      actor.panicking = 1;
+    });
   }
 
   finishScan(names, done) {
@@ -722,7 +747,7 @@ class UfoWorld {
         const panicLevel = this.scanActive ? this.scanPulse || 0 : 0;
         const speed = panicSpeed(panicLevel);
         
-        if (a.escapeAction && this.lockTarget === a) {
+        if (a.escapeAction) {
           a.escapeProgress += dt * 2.5;
           
           if (a.escapeAction === 'roll') {
