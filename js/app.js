@@ -4,6 +4,7 @@ import { chooseScanWinners, clampPickCount, scanTargetAt } from './scan-round.js
 import { startChase, stopChase, ping, reveal, setMusicEnabled, setSfxEnabled, loadAudioPreferences, getAudioState } from './suspense-sound.js';
 import { UFO_SKINS, CREW_SKINS, getUfoSkin, getCrewSkin, loadSkinPreferences, saveSkinPreferences } from './skin-catalog.js';
 import { loadClasses, saveClasses, getActiveClass, createClass, updateClass, deleteClass, duplicateClass, exportClassesJSON, importClassesJSON, importClassesCSV } from './class-manager.js';
+import { mountImageLibrary } from './image-library.js';
 
 const DEFAULT_STUDENTS = ['An Nhiên', 'Bảo Ngọc', 'Gia Hân', 'Minh Khang', 'Thanh Vy'];
 const $ = s => document.querySelector(s);
@@ -23,6 +24,7 @@ const el = {
   settingsOpen: $('#settings-button'),
   classTab: $('#class-tab'),
   studentTab: $('#student-tab'),
+  imagesTab: $('#images-tab'),
   classManagement: $('#class-management'),
   input: $('#students-input'),
   save: $('#save-students-button'),
@@ -551,24 +553,27 @@ if (el.classSelector) {
 
 // Settings tabs
 if (el.classTab && el.studentTab) {
+  const switchSettingsPanel = panel => {
+    [['class', el.classTab], ['students', el.studentTab], ['images', el.imagesTab]].forEach(([name, button]) => {
+      if (!button) return;
+      const active = name === panel;
+      button.style.borderBottomColor = active ? 'var(--accent)' : 'transparent';
+      button.style.color = active ? 'var(--text)' : 'var(--muted)';
+    });
+    $('#class-management').style.display = panel === 'class' ? 'block' : 'none';
+    $('#student-list-editor').style.display = panel === 'students' ? 'block' : 'none';
+    $('#image-library').style.display = panel === 'images' ? 'block' : 'none';
+  };
   el.classTab.onclick = () => {
-    el.classTab.style.borderBottomColor = 'var(--accent)';
-    el.classTab.style.color = 'var(--text)';
-    el.studentTab.style.borderBottomColor = 'transparent';
-    el.studentTab.style.color = 'var(--muted)';
-    $('#class-management').style.display = 'block';
-    $('#student-list-editor').style.display = 'none';
+    switchSettingsPanel('class');
   };
   
   el.studentTab.onclick = () => {
-    el.studentTab.style.borderBottomColor = 'var(--accent)';
-    el.studentTab.style.color = 'var(--text)';
-    el.classTab.style.borderBottomColor = 'transparent';
-    el.classTab.style.color = 'var(--muted)';
-    $('#student-list-editor').style.display = 'block';
-    $('#class-management').style.display = 'none';
+    switchSettingsPanel('students');
     el.input.value = students.join('\n');
   };
+  el.imagesTab.onclick = () => switchSettingsPanel('images');
+  mountImageLibrary($('#image-library'));
 }
 
 el.settingsOpen.onclick = () => {
@@ -577,12 +582,7 @@ el.settingsOpen.onclick = () => {
   
   // Reset to class tab
   if (el.classTab) {
-    el.classTab.style.borderBottomColor = 'var(--accent)';
-    el.classTab.style.color = 'var(--text)';
-    el.studentTab.style.borderBottomColor = 'transparent';
-    el.studentTab.style.color = 'var(--muted)';
-    $('#class-management').style.display = 'block';
-    $('#student-list-editor').style.display = 'none';
+    switchSettingsPanel('class');
   }
   
   el.settings.showModal();
