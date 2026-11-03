@@ -49,6 +49,9 @@ const el = {
   timer: $('#scan-timer'),
   title: $('#scan-title'),
   help: $('#scan-help')
+  ,crewClassName: $('#crew-class-name')
+  ,crewCount: $('#crew-count')
+  ,enableAll: $('#enable-all')
 };
 
 let students = [];
@@ -59,6 +62,7 @@ let noRepeat = true;
 let seconds = 6;
 let scanning = false;
 let scanInterval = null;
+let restingStudents = new Set();
 
 // Class management
 let classData = loadClasses();
@@ -90,7 +94,8 @@ function saveStudents() {
 }
 
 function available() {
-  return noRepeat ? round.remaining : students;
+  const ready = students.filter(name => !restingStudents.has(name));
+  return noRepeat ? round.remaining.filter(name => ready.includes(name)) : ready;
 }
 
 function render() {
@@ -113,11 +118,20 @@ function render() {
   // Render student list - use textContent to avoid XSS
   el.list.innerHTML = '';
   students.forEach(name => {
-    const chip = document.createElement('span');
-    chip.className = `student-chip ${noRepeat && round.called.includes(name) ? 'called' : ''}`;
-    chip.textContent = `${noRepeat && round.called.includes(name) ? '✓' : '✦'} ${name}`;
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = `student-chip ${noRepeat && round.called.includes(name) ? 'called' : ''} ${restingStudents.has(name) ? 'resting' : ''}`;
+    chip.textContent = `${restingStudents.has(name) ? '○' : (noRepeat && round.called.includes(name) ? '✓' : '✦')} ${name}`;
+    chip.disabled = scanning;
+    chip.onclick = () => {
+      if (restingStudents.has(name)) restingStudents.delete(name); else restingStudents.add(name);
+      world?.setStudents(available());
+      render();
+    };
     el.list.appendChild(chip);
   });
+  if (el.crewClassName) el.crewClassName.textContent = activeClass.name;
+  if (el.crewCount) el.crewCount.textContent = `${students.length - restingStudents.size} bạn sẵn sàng`;
   
   el.help.textContent = `Nhấn Space để bắt đầu · Dò tìm trong ${seconds} giây · Cơ hội như nhau cho ${ready} học sinh.`;
   
@@ -219,7 +233,7 @@ function reset() {
   scanning = false;
   round = createRound(students);
   
-  world?.setStudents(students);
+  world?.setStudents(available());
   world?.cancelScan();
   
   el.name.textContent = 'Bấm để gọi học sinh';
@@ -332,6 +346,7 @@ function switchClass(classId) {
   classData.activeClassId = classId;
   activeClass = getActiveClass(classData.classes, classId);
   students = [...activeClass.students];
+  restingStudents = new Set();
   
   // Update lastUsed
   classData.classes = updateClass(classData.classes, classId, {});
@@ -532,6 +547,12 @@ el.repeat.onclick = () => {
   el.repeat.classList.toggle('on', noRepeat);
   el.repeat.setAttribute('aria-pressed', noRepeat);
   reset();
+};
+
+if (el.enableAll) el.enableAll.onclick = () => {
+  restingStudents = new Set();
+  world?.setStudents(available());
+  render();
 };
 
 $$('[data-seconds]').forEach(b => {
