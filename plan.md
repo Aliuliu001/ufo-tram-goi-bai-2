@@ -138,3 +138,34 @@ Mỗi lượt gọi có thể lấy ngẫu nhiên một câu từ bộ đang b�
 - Có thể tạo/nhập ảnh hoặc text và dùng đủ Flashcards, Quiz, Điền khuyết/Anagram/Unjumble.
 - UI dùng được trên laptop 1366×768, không che nút điều khiển quan trọng và có chế độ Giảm hiệu ứng.
 - Không có tên học sinh thật hoặc tài sản sao chép từ website gốc trong repository.
+
+
+## Kiến trúc bắt buộc — Game Image Upload
+
+Hệ thống ảnh tuân theo đặc tả **Game Image Upload (100+ ảnh cho game giáo dục)** và thay thế phần mô tả IndexedDB trước đó.
+
+### Sáu khối triển khai
+
+1. **Nén ảnh thông minh:** PNG/JPG/WebP được đọc qua canvas, tự nén sang WebP theo kích thước/chất lượng phù hợp; giữ alpha channel để sticker PNG trong suốt không mất nền.
+2. **ImageDB (IndexedDB):** ảnh binary và metadata được lưu tách biệt, đủ cho 100+ ảnh và hoạt động offline. localStorage không chứa blob/base64 ảnh trong vận hành thường.
+3. **SafeStore:** bọc localStorage/IndexedDB bằng fallback bộ nhớ; nếu trình duyệt, Zalo hoặc private mode chặn storage, game vẫn mở được và báo rõ dữ liệu chỉ tồn tại trong phiên hiện tại.
+4. **Tách ảnh khỏi auto-save:** chỉnh text/câu hỏi chỉ lưu metadata; thao tác gõ không tuần tự hoá lại hàng trăm ảnh.
+5. **Kho ảnh:** kéo-thả, upload hàng loạt, thumbnail, đếm ảnh/dung lượng, cảnh báo thiếu asset, xóa hàng loạt có xác nhận, và cập nhật sân chơi ngay khi asset đổi.
+6. **Backup/Restore một file:** export JSON bao gồm dữ liệu, cài đặt, metadata và ảnh mã hóa Base64. Restore kiểm tra schema trước, hỏi xác nhận trước khi ghi đè, ghi ImageDB trước rồi mới cập nhật metadata.
+
+### Tương thích và bảo vệ dữ liệu
+
+- Chạy migration từ dữ liệu localStorage cũ sang IndexedDB khi phát hiện bản cũ; migration có cờ hoàn tất, có thể chạy lại an toàn.
+- Chuẩn hóa ID ảnh: trim khoảng trắng, nhận diện tên như `12.PNG` thành ID `12`, chặn ID trùng.
+- Từ chối HEIC và file không phải ảnh với danh sách lỗi từng tệp; không làm hỏng những ảnh hợp lệ đã nhập cùng đợt.
+- Kiểm tra quota bằng `navigator.storage.estimate()` khi trình duyệt hỗ trợ; cảnh báo đỏ khi dung lượng thấp/hết chỗ.
+- Restore file sai định dạng không được phép thay đổi bất kỳ dữ liệu hiện tại nào.
+- Settings modal phải scroll độc lập, responsive và không tràn màn hình.
+
+### Kiểm thử bắt buộc
+
+1. Upload PNG trong suốt, JPG và WebP; kiểm tra alpha/thumbnail/dung lượng.
+2. Upload 100+ ảnh; reload vẫn có đủ asset và UI không lag khi sửa text.
+3. Backup → xóa dữ liệu → restore → reload: dữ liệu lớp, cài đặt, metadata và ảnh đều trở lại.
+4. Restore file sai: dữ liệu hiện tại không đổi.
+5. Chặn storage/mô phỏng lỗi IndexedDB: game vào SafeStore và vẫn không trắng màn hình.
