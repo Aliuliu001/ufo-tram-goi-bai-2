@@ -707,16 +707,21 @@ if (el.motion) {
 
 if (el.fullscreen) {
   const syncFullscreen = () => {
-    const active = document.fullscreenElement === document.querySelector('.stage');
+    const stage = document.querySelector('.stage');
+    const active = document.fullscreenElement === stage || stage?.classList.contains('stage-presentation');
     el.fullscreen.textContent = active ? '⤢' : '⛶';
     el.fullscreen.setAttribute('aria-label', active ? 'Thoát toàn màn hình sân khấu' : 'Mở toàn màn hình sân khấu');
   };
   el.fullscreen.onclick = async () => {
     const stage = document.querySelector('.stage');
     try {
-      if (document.fullscreenElement) await document.exitFullscreen();
+      if (stage?.classList.contains('stage-presentation')) stage.classList.remove('stage-presentation');
+      else if (document.fullscreenElement) await document.exitFullscreen();
       else await stage?.requestFullscreen?.();
-    } catch { /* Browser may refuse fullscreen outside a trusted gesture. */ }
+    } catch {
+      // A safe presentation fallback for embedded/locked-down browsers.
+      stage?.classList.toggle('stage-presentation');
+    }
     syncFullscreen();
   };
   document.addEventListener('fullscreenchange', syncFullscreen);
