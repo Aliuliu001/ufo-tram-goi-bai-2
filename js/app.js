@@ -212,7 +212,7 @@ function finishScan(winners) {
   el.name.textContent = 'ÄANG KHÃA TÃN HIá»Uâ¦';
   el.status.textContent = 'UFO ÄÃ£ khÃ³a káº¿t quáº£. TÃªn sáº½ ÄÆ°á»£c cÃ´ng bá» sau khi hÃºt xong.';
   
-  world?.finishScan(winners, () => {
+  const completeRound = () => {
     winners.forEach(x => {
       if (noRepeat && !round.called.includes(x)) {
         round.called.push(x);
@@ -234,7 +234,10 @@ function finishScan(winners) {
     runLearningActivity(activeClass.id, winners, () => {
       el.status.textContent = 'ÄÃ£ hoÃ n thÃ nh nhiá»m vá»¥ há»c táº­p. UFO tháº£ phi hÃ nh gia xuá»ng Äá» tiáº¿p tá»¥c cháº¡y!';
     });
-  });
+  };
+  // Thiáº¿t bá»/trÃ¬nh duyá»t khÃ´ng cÃ³ WebGL váº«n pháº£i hoÃ n táº¥t lÆ°á»£t gá»i bÃ i.
+  if (world) world.finishScan(winners, completeRound);
+  else completeRound();
 }
 
 function reset() {
