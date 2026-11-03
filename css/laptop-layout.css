@@ -10,6 +10,10 @@ body { font-family: Outfit, "Segoe UI", Arial, sans-serif; }
 .stage:fullscreen .world-card { top: 28px; right: 32px; }
 .stage:fullscreen .world-hint { top: 28px; left: 32px; }
 .stage:fullscreen .stage-footer { right: 32px; bottom: 26px; }
+.stage.stage-presentation { position: fixed; inset: 0; z-index: 1000; width: 100vw; height: 100vh; max-width: none; border: 0; border-radius: 0; background: #020617; }
+.stage.stage-presentation .world-card { top: 28px; right: 32px; }
+.stage.stage-presentation .world-hint { top: 28px; left: 32px; }
+.stage.stage-presentation .stage-footer { right: 32px; bottom: 26px; }
 @media (min-width: 1280px) {
   .topbar, .controls, .mission-bar { padding-inline: 26px; }
   .scan-controls { grid-template-columns: minmax(310px, 1fr) auto auto; }
