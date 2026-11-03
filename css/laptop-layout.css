@@ -1,0 +1,21 @@
+/* Wide, readable classroom layout for laptop screens. */
+body { font-family: Outfit, "Segoe UI", Arial, sans-serif; }
+.app-shell { width: min(1600px, calc(100% - 48px)); gap: 18px; padding: 20px 0 38px; }
+.game-workspace { grid-template-columns: 280px minmax(0, 1fr); gap: 18px; align-items: stretch; }
+.crew-panel { min-height: 570px; padding: 20px; }
+.stage { min-height: 570px; border-radius: 24px; }
+.world-card { top: 20px; right: 22px; width: 245px; padding: 16px; }
+.world-hint { top: 18px; left: 20px; }
+.stage:fullscreen { width: 100vw; height: 100vh; max-width: none; border: 0; border-radius: 0; background: #020617; }
+.stage:fullscreen .world-card { top: 28px; right: 32px; }
+.stage:fullscreen .world-hint { top: 28px; left: 32px; }
+.stage:fullscreen .stage-footer { right: 32px; bottom: 26px; }
+@media (min-width: 1280px) {
+  .topbar, .controls, .mission-bar { padding-inline: 26px; }
+  .scan-controls { grid-template-columns: minmax(310px, 1fr) auto auto; }
+  .camera-bar { padding-inline: 24px; }
+}
+@media (max-width: 900px) {
+  .app-shell { width: min(100% - 24px, 960px); }
+  .stage { min-height: 470px; }
+}
