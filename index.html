@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/app.css?v=10">
   <link rel="stylesheet" href="css/recovery.css?v=10">
   <link rel="stylesheet" href="css/image-library.css?v=1">
+  <link rel="stylesheet" href="css/question-bank.css?v=1">
 </head>
 <body>
   <main class="app-shell">
@@ -64,6 +65,7 @@
         <button type="button" id="class-tab" class="tab-button active" style="padding:8px 16px;background:none;border:none;border-bottom:2px solid var(--accent);color:var(--text);font-weight:600;cursor:pointer">Quản lý lớp</button>
         <button type="button" id="student-tab" class="tab-button" style="padding:8px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;cursor:pointer">Danh sách học sinh</button>
         <button type="button" id="images-tab" class="tab-button" style="padding:8px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;cursor:pointer">Kho ảnh</button>
+        <button type="button" id="questions-tab" class="tab-button" style="padding:8px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;cursor:pointer">Nội dung học</button>
       </div>
       
       <div id="class-management" style="display:block"></div>
@@ -78,8 +80,11 @@
       </div>
       <div id="image-library" class="image-library" style="display:none;min-height:180px"></div>
       <div id="backup-library" class="image-library" style="display:none"></div>
+      <div id="question-bank" class="image-library" style="display:none"></div>
     </form>
   </dialog>
+  <dialog id="question-editor" class="dialog"></dialog>
+  <dialog id="learning-dialog" class="dialog"></dialog>
   
   <dialog id="skin-dialog" class="dialog">
     <form method="dialog" class="dialog-card">
