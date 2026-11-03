@@ -5,6 +5,7 @@ import { startChase, stopChase, ping, reveal, setMusicEnabled, setSfxEnabled, lo
 import { UFO_SKINS, CREW_SKINS, getUfoSkin, getCrewSkin, loadSkinPreferences, saveSkinPreferences } from './skin-catalog.js';
 import { loadClasses, saveClasses, getActiveClass, createClass, updateClass, deleteClass, duplicateClass, exportClassesJSON, importClassesJSON, importClassesCSV } from './class-manager.js';
 import { mountImageLibrary } from './image-library.js';
+import { mountBackupControls } from './game-backup.js';
 
 const DEFAULT_STUDENTS = ['An Nhiên', 'Bảo Ngọc', 'Gia Hân', 'Minh Khang', 'Thanh Vy'];
 const $ = s => document.querySelector(s);
@@ -563,6 +564,7 @@ if (el.classTab && el.studentTab) {
     $('#class-management').style.display = panel === 'class' ? 'block' : 'none';
     $('#student-list-editor').style.display = panel === 'students' ? 'block' : 'none';
     $('#image-library').style.display = panel === 'images' ? 'block' : 'none';
+    $('#backup-library').style.display = panel === 'images' ? 'block' : 'none';
   };
   el.classTab.onclick = () => {
     switchSettingsPanel('class');
@@ -574,6 +576,7 @@ if (el.classTab && el.studentTab) {
   };
   el.imagesTab.onclick = () => switchSettingsPanel('images');
   mountImageLibrary($('#image-library'));
+  mountBackupControls($('#backup-library'));
 }
 
 el.settingsOpen.onclick = () => {
