@@ -592,8 +592,9 @@ if (el.classSelector) {
 }
 
 // Settings tabs
+let switchSettingsPanel = () => {};
 if (el.classTab && el.studentTab) {
-  const switchSettingsPanel = panel => {
+  switchSettingsPanel = panel => {
     [['class', el.classTab], ['students', el.studentTab], ['images', el.imagesTab], ['questions', el.questionsTab]].forEach(([name, button]) => {
       if (!button) return;
       const active = name === panel;
