@@ -1,12 +1,12 @@
-import { createRound } from './game-engine.js';
-import { createWorld3D } from './scene3d.js';
-import { chooseScanWinners, clampPickCount, scanTargetAt } from './scan-round.js';
-import { startChase, stopChase, ping, reveal, setMusicEnabled, setSfxEnabled, loadAudioPreferences, getAudioState } from './suspense-sound.js';
-import { UFO_SKINS, CREW_SKINS, getUfoSkin, getCrewSkin, loadSkinPreferences, saveSkinPreferences } from './skin-catalog.js';
-import { loadClasses, saveClasses, getActiveClass, createClass, updateClass, deleteClass, duplicateClass, exportClassesJSON, importClassesJSON, importClassesCSV } from './class-manager.js';
-import { mountImageLibrary } from './image-library.js';
-import { mountBackupControls } from './game-backup.js';
-import { mountQuestionBank, runLearningActivity } from './question-bank.js';
+import { createRound } from './game-engine.js?v=15';
+import { createWorld3D } from './scene3d.js?v=15';
+import { chooseScanWinners, clampPickCount, scanTargetAt } from './scan-round.js?v=15';
+import { startChase, stopChase, ping, reveal, setMusicEnabled, setSfxEnabled, loadAudioPreferences, getAudioState } from './suspense-sound.js?v=15';
+import { UFO_SKINS, CREW_SKINS, getUfoSkin, getCrewSkin, loadSkinPreferences, saveSkinPreferences } from './skin-catalog.js?v=15';
+import { loadClasses, saveClasses, getActiveClass, createClass, updateClass, deleteClass, duplicateClass, exportClassesJSON, importClassesJSON, importClassesCSV } from './class-manager.js?v=15';
+import { mountImageLibrary } from './image-library.js?v=15';
+import { mountBackupControls } from './game-backup.js?v=15';
+import { mountQuestionBank, runLearningActivity } from './question-bank.js?v=15';
 
 const DEFAULT_STUDENTS = ['An NhiÃªn', 'Báº£o Ngá»c', 'Gia HÃ¢n', 'Minh Khang', 'Thanh Vy'];
 const $ = s => document.querySelector(s);
