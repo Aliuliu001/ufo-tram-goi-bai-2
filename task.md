@@ -22,7 +22,7 @@
 ## 2. Nội dung học tập
 
 - [ ] 2.1 Model bộ nội dung, câu hỏi và gán bộ cho lớp.
-- [ ] 2.2 IndexedDB cho ảnh PNG/JPEG/WebP, thumbnail và kéo-thả.
+- [ ] 2.2 Thêm SafeStore: IndexedDB ưu tiên, localStorage/memory fallback và migration dữ liệu cũ.\n- [ ] 2.3 Nén PNG/JPG/WebP sang WebP, giữ alpha; chuẩn hóa ID và báo lỗi HEIC/file không hợp lệ.\n- [ ] 2.4 Kho ảnh: kéo-thả, thumbnail, dung lượng/quota, cảnh báo asset thiếu và xóa hàng loạt có xác nhận.\n- [ ] 2.5 Backup/Restore JSON gồm metadata + Base64 ảnh; validate trước restore và ghi ImageDB trước.\n- [ ] 2.6 Model bộ nội dung, câu hỏi và gán bộ cho lớp.\n- [ ] 2.7 Quản lý câu hỏi text/ảnh; kiểm tra dữ liệu trước khi chơi.\n- [ ] 2.8 Flashcards 1–7 thẻ, xác nhận thả xuống khi đúng hết.\n- [ ] 2.9 Quiz: 1 đáp án đúng + 3 đáp án sai, xáo lựa chọn.\n- [ ] 2.10 Điền khuyết, anagram và unjumble.\n- [ ] 2.11 Luồng đúng/thả xuống, sai/thử lại trên UFO.\n- [ ] 2.12 Test upload 100+ ảnh, backup/restore, file sai và SafeStore.
 - [ ] 2.3 Quản lý câu hỏi text/ảnh; kiểm tra dữ liệu trước khi chơi.
 - [ ] 2.4 Flashcards 1–7 thẻ, xác nhận thả xuống khi đúng hết.
 - [ ] 2.5 Quiz: 1 đáp án đúng + 3 đáp án sai, xáo lựa chọn.
