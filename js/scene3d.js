@@ -1,5 +1,5 @@
-import { abductionProgress } from './world3d-state.js';
-import { panicSpeed, getEscapeAction } from './movement-profile.js';
+import { abductionProgress } from './world3d-state.js?v=15';
+import { panicSpeed, getEscapeAction } from './movement-profile.js?v=15';
 
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
 
