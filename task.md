@@ -1,51 +1,62 @@
-# Danh sách công việc — tái tạo UFO Trạm Gọi Bài 3D
+# Danh sÃ¡ch cÃ´ng viá»c â tÃ¡i táº¡o UFO Tráº¡m Gá»i BÃ i 3D
 
-> Chỉ đánh dấu hoàn tất khi đã kiểm tra. `[~]` là đã có bản chạy nhưng còn cần kiểm thử thực tế.
+> Tráº¡ng thÃ¡i chá» ÄÆ°á»£c chuyá»n sang hoÃ n táº¥t khi ÄÃ£ kiá»m tra. Báº£n cÅ© trong repo lÃ  ná»n tham kháº£o ká»¹ thuáº­t, khÃ´ng pháº£i giao diá»n ÄÃ­ch.
 
-## 0. Khảo sát và định hướng
+## 0. Kháº£o sÃ¡t vÃ  Äá»nh hÆ°á»ng
 
-- [x] Khảo sát website gốc, xác định layout và luồng chơi đích.
-- [x] Chốt cảnh quét hài hước, ngân hàng ảnh/text và ba dạng bài.
-- [x] Viết plan kỹ thuật, kiến trúc SafeStore/ImageDB và tiêu chí nghiệm thu.
+- [x] XÃ¡c nháº­n URL website gá»c vÃ  kháº£o sÃ¡t giao diá»n/luá»ng chÆ¡i.
+- [x] XÃ¡c nháº­n repo hiá»n táº¡i Äang chá»©a project khÃ¡c vá» UI vÃ  cÆ¡ cháº¿ quiz.
+- [x] Viáº¿t láº¡i káº¿ hoáº¡ch triá»n khai theo website gá»c.
+- [x] Chá»t pháº¡m vi: cáº£nh quÃ©t hÃ i hÆ°á»c, ngÃ¢n hÃ ng áº£nh/text vÃ  ba dáº¡ng bÃ i.
 
-## 1. Nền game và dữ liệu lớp
+## 1. Dá»¯ liá»u vÃ  luáº­t gá»i bÃ i
 
-- [x] Model lớp, học sinh, lịch sử chuyến bay và thiết lập.
-- [x] LocalStorage an toàn, chọn ngẫu nhiên, chống trùng, chọn nhiều bạn và reset vòng.
-- [x] Unit test cho luật gọi bài.
-- [~] Quản lý thêm/sửa/xóa lớp và danh sách học sinh qua modal.
-- [ ] Bật/tắt từng học sinh và Bật tất cả trong UI đích.
+- [x] 1.1 Táº¡o model lá»p, há»c sinh, lá»ch sá»­ chuyáº¿n bay vÃ  thiáº¿t láº­p.
+- [x] 1.2 ThÃªm ná»n localStorage vá»i dá»¯ liá»u lá»p máº«u.
+- [x] 1.3 Ná»i thÃªm/sá»­a/xÃ³a lá»p vÃ  há»c sinh vÃ o giao diá»n má»i.
+- [x] 1.4 Ná»i báº­t/táº¯t tá»«ng há»c sinh vÃ  Báº­t táº¥t cáº£ vÃ o giao diá»n má»i.
+- [x] 1.5 CÃ i luáº­t chá»n ngáº«u nhiÃªn 1/nhiá»u há»c sinh, cÃ³/khÃ´ng chá»ng trÃ¹ng.
+- [x] 1.6 CÃ i reset vÃ²ng vÃ  nháº­t kÃ½ chuyáº¿n bay á» táº§ng domain.
+- [x] 1.7 Viáº¿t test cho cÃ¡c luáº­t chá»n ngáº«u nhiÃªn.
 
-## 2. Kho ảnh, backup và nội dung học tập
+## 2. Ná»i dung há»c táº­p
 
-- [x] ImageDB/IndexedDB, nén WebP, giữ alpha, chuẩn hóa ID và báo file không hợp lệ.
-- [x] Kho ảnh kéo-thả, thumbnail, dung lượng, xóa có xác nhận.
-- [~] SafeStore fallback và kiểm tra quota; cần kiểm tra trên trình duyệt hạn chế storage.
-- [~] Backup/restore JSON cho lớp và ảnh; cần kiểm thử vòng backup → xóa → restore.
-- [x] Model câu hỏi và kiểm tra Quiz bốn đáp án.
-- [x] UI tạo/xóa/bật-tắt nội dung học tập.
-- [~] Flashcards 1–7, Quiz, Điền khuyết, Anagram, Unjumble và luồng đúng/thử lại.
-- [ ] Chọn ảnh đã upload trực tiếp trong form câu hỏi và xem trước ảnh.
+- [x] 2.1 Model bá» ná»i dung, cÃ¢u há»i vÃ  gÃ¡n bá» cho lá»p.
+- [~] 2.2 SafeStore: IndexedDB cho kho áº£nh; fallback vÃ  migration cÃ²n cáº§n test trÃªn trÃ¬nh duyá»t cháº·n storage.
+- [x] 2.3 NÃ©n PNG/JPG/WebP sang WebP, giá»¯ alpha, chuáº©n hÃ³a ID vÃ  bÃ¡o file khÃ´ng há»£p lá».
+- [x] 2.4 Kho áº£nh: kÃ©o-tháº£, thumbnail, dung lÆ°á»£ng/quota vÃ  xÃ³a tá»«ng áº£nh hoáº·c toÃ n bá» cÃ³ xÃ¡c nháº­n.
+- [x] 2.5 Backup/Restore v2: lá»p, cÃ¢u há»i, cÃ i Äáº·t, metadata + Base64 áº£nh; validate trÆ°á»c restore vÃ  ghi ImageDB trÆ°á»c.
+- [x] 2.6 Quáº£n lÃ½ cÃ¢u há»i text/áº£nh; kiá»m tra dá»¯ liá»u trÆ°á»c khi chÆ¡i.
+- [x] 2.7 Flashcards 1â7 tháº», xÃ¡c nháº­n tháº£ xuá»ng khi ÄÃºng háº¿t.
+- [x] 2.8 Quiz: 1 ÄÃ¡p Ã¡n ÄÃºng + 3 ÄÃ¡p Ã¡n sai, xÃ¡o lá»±a chá»n.
+- [x] 2.9 Äiá»n khuyáº¿t, anagram vÃ  unjumble.
+- [x] 2.10 Luá»ng ÄÃºng/tháº£ xuá»ng, sai/thá»­ láº¡i trÃªn UFO.
+- [ ] 2.11 Kiá»m thá»­ thá»§ cÃ´ng upload 100+ áº£nh, backup/restore, file sai vÃ  SafeStore.
 
-## 3. Giao diện
+## 3. Giao diá»n chuáº©n ÄÃ­ch
 
-- [x] Khôi phục dark mode navy/cyan/lime, sân khấu Three.js, skin và camera.
-- [~] Header, lớp, điều khiển lượt, camera, nhật ký và Settings modal.
-- [ ] Bố cục ba vùng giống bản tham chiếu và panel Phi hành đoàn tắt/bật từng bạn.
-- [ ] Responsive laptop/màn hẹp, toàn màn hình, hướng dẫn và Giảm hiệu ứng.
+- [~] 3.1 Header: logo, nháº¡c/SFX riÃªng, cÃ i Äáº·t vÃ  Giáº£m hiá»u á»©ng; hÆ°á»ng dáº«n/toÃ n mÃ n hÃ¬nh cÃ²n thiáº¿u.
+- [x] 3.2 Panel chá»n lá»p vÃ  phi hÃ nh ÄoÃ n.
+- [x] 3.3 Dark mode navy/cyan/lime cÃ³ hierarchy, focus state vÃ  khÃ´ng dÃ¹ng khá»i hÃ¬nh thÃ´.
+- [x] 3.4 SÃ¢n kháº¥u vá»i HUD tráº¡ng thÃ¡i vÃ  ba gÃ³c camera.
+- [x] 3.5 Äiá»u khiá»n sá» báº¡n, khÃ´ng gá»i trÃ¹ng, thá»i gian vÃ  báº¯t Äáº§u lÆ°á»£t.
+- [~] 3.6 Quáº£n lÃ½ lá»p vÃ  ná»i dung ÄÃ£ cÃ³; nháº­t kÃ½ chuyáº¿n bay/Cháº¿ Äá» giÃ¡o viÃªn cÃ²n thiáº¿u.
+- [x] 3.7 Responsive laptop/mÃ n hÃ¬nh háº¹p, bÃ n phÃ­m vÃ  Giáº£m hiá»u á»©ng.
 
-## 4. Cảnh 3D và âm thanh
+## 4. Cáº£nh 3D vÃ  Ã¢m thanh
 
-- [x] Khu phố, UFO, nhân vật và ba góc camera.
-- [~] Quét bí mật, đếm ngược, chọn mục tiêu và tia hút.
-- [ ] UFO blink/tia quét rõ hơn, nhạc tăng nhịp theo thời gian dò.
-- [ ] Hành động né vui: lộn nhào, đào đất, nhảy nước, leo cây, chui bụi, nhảy hàng rào.
-- [ ] Cooldown, giới hạn hành động đồng thời và hiệu năng yếu.
-- [~] Chuỗi bắt → bài học → thả xuống/thử lại → nhật ký.
+- [x] 4.1 Dá»±ng UFO, khu phá», cÃ¢y, bá»¥i, nÆ°á»c, váº­t cáº£n vÃ  nhÃ¢n váº­t tá»± táº¡o.
+- [x] 4.2 Ba gÃ³c camera: toÃ n cáº£nh, theo dáº¥u UFO, gÃ³c phá».
+- [x] 4.3 QuÃ©t: nháº¡c tÄng nhá»p, UFO blink, tia sÃ¡ng quÃ©t vÃ  má»¥c tiÃªu bÃ­ máº­t.
+- [x] 4.4 HÃ nh Äá»ng nÃ© trÃ¡nh: lá»n nhÃ o, ÄÃ o Äáº¥t, nháº£y nÆ°á»c, leo cÃ¢y, chui bá»¥i, nháº£y hÃ ng rÃ o.
+- [x] 4.5 Giá»i háº¡n hÃ nh Äá»ng Äá»ng thá»i/cooldown vÃ  giáº£m hiá»u á»©ng Äá» giá»¯ hiá»u nÄng.
+- [~] 4.6 Chuá»i quÃ©t â hÃºt â bÃ i há»c â tháº£ xuá»ng/thá»­ láº¡i; nháº­t kÃ½ cÃ²n thiáº¿u.
+- [x] 4.7 Ãm thanh Web Audio báº­t/táº¯t ngay ÄÆ°á»£c.
 
-## 5. Kiểm thử và phát hành
+## 5. Kiá»m thá»­ vÃ  phÃ¡t hÃ nh
 
-- [x] Type-check, production build và 40 test tự động.
-- [ ] Kiểm thử trình duyệt: kho ảnh, backup/restore, ba dạng bài, lớp, âm thanh và giảm hiệu ứng.
-- [ ] Cập nhật README và cấu hình GitHub Pages.
-- [ ] Xác nhận link phát hành.
+- [x] 5.1 Cháº¡y 40 test, type-check vÃ  build production.
+- [ ] 5.2 Kiá»m thá»­ thá»§ cÃ´ng ba dáº¡ng bÃ i, áº£nh lá»i vÃ  dá»¯ liá»u rá»ng.
+- [ ] 5.3 Kiá»m thá»­ lá»p/há»c sinh, khÃ´ng trÃ¹ng, reset, reload, Ã¢m thanh vÃ  Giáº£m hiá»u á»©ng.
+- [~] 5.4 Cáº­p nháº­t README vÃ  GitHub Pages.
+- [ ] 5.5 XÃ¡c nháº­n link phÃ¡t hÃ nh.
